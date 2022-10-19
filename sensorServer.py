@@ -1,16 +1,35 @@
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
 import pandas as pd
-import ast
+import database
+from datetime import datetime, date
 
 app = Flask(__name__)
 api = Api(app)
 
 class Driveway(Resource):
 	def get(self):
-		data = 'Driveway'
-		return {'data': data}, 200
+		sql = """
+			SELECT
+				id, time, notes
+			FROM
+				driveway_sensor
+		"""
+		results = database.fetchAll(sql, {})
+		return {'data': results}, 200
 
+	def post(self):
+		new = database.fetchOne("""
+			INSERT INTO
+				driveway_sensor (
+					time
+				) VALUES (
+					'{time}'
+				)
+			RETURNING id, time, notes;
+			""", {'time': datetime.datetime.now()})
+
+		return {'data': {'id': new[0], 'time': new[1], 'notes':new[2]}}, 200
 
 api.add_resource(Driveway, '/driveway')
 

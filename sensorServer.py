@@ -1,6 +1,5 @@
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
-import pandas as pd
 import database
 from datetime import datetime, date
 
@@ -27,9 +26,12 @@ class Driveway(Resource):
 					'{time}'
 				)
 			RETURNING id, time, notes;
-			""", {'time': datetime.datetime.now()})
-
-		return {'data': {'id': new[0], 'time': new[1], 'notes':new[2]}}, 200
+			""", {'time': datetime.now()})
+		if new:
+			data = {'id': new[0], 'time': new[1], 'notes':new[2]}
+		else:
+			data = new
+		return {'data': data}, 200
 
 api.add_resource(Driveway, '/driveway')
 

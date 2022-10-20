@@ -33,14 +33,9 @@ def fetchOne(sql, params):
 			results = cursor.fetchone()
 			to_return = [json_serial(res) for res in results]
 			return(to_return)
-
-
 	except (Exception, psycopg2.DatabaseError) as error:
 		print(error)
-	finally:
-		if conn is not None:
-			conn.close()
-			print('Database connection closed.')
+
 
 def fetchAll(sql, params):
 	try:
@@ -55,10 +50,6 @@ def fetchAll(sql, params):
 
 	except (Exception, psycopg2.DatabaseError) as error:
 		print(error)
-	finally:
-		if conn is not None:
-			conn.close()
-			print('Database connection closed.')
 
 def execute(sql, params):
 	try:
@@ -71,8 +62,3 @@ def execute(sql, params):
 
 	except (Exception, psycopg2.DatabaseError) as error:
 		print(error)
-	finally:
-		if conn is not None:
-			conn.close()
-			print('Database connection closed.')
-

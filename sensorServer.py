@@ -16,7 +16,14 @@ class Driveway(Resource):
 				driveway_sensor
 		"""
 		results = database.fetchAll(sql, {})
-		return {'data': results}, 200
+		dict_results = []
+		for res in results:
+			dict_results.append({
+				'id': res[0],
+				'time': res[1],
+				'notes': res[2]
+			})
+		return {'data': dict_results}, 200
 
 	def post(self):
 		time_zone = pytz.timezone('America/Denver')

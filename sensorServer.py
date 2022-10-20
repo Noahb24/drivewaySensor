@@ -1,7 +1,8 @@
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
 import database
-from datetime import datetime, date
+from datetime import datetime
+import pytz
 
 app = Flask(__name__)
 api = Api(app)
@@ -18,6 +19,8 @@ class Driveway(Resource):
 		return {'data': results}, 200
 
 	def post(self):
+		time_zone = pytz.timezone('America/Denver')
+		time = datetime.now(time_zone)
 		new = database.fetchOne("""
 			INSERT INTO
 				driveway_sensor (
@@ -26,7 +29,7 @@ class Driveway(Resource):
 					'{time}'
 				)
 			RETURNING id, time, notes;
-			""", {'time': datetime.now()})
+			""", {'time': time})
 		if new:
 			data = {'id': new[0], 'time': new[1], 'notes':new[2]}
 		else:
@@ -36,4 +39,4 @@ class Driveway(Resource):
 api.add_resource(Driveway, '/driveway')
 
 if __name__ == '__main__':
-	app.run()
+	app.run(host='0.0.0.0', port=8080, threaded=True)

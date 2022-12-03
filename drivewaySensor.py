@@ -7,7 +7,7 @@ print ('Driveway Sensor is starting')
 button = Button(18)
 
 def triggerSensor():
-    x = requests.post('http://192.168.1.138:8080/driveway')
+    x = requests.post('http://192.168.0.178:3500/driveway/tripped')
     print(x.text)
     print('Drive tripped')
 
